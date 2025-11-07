@@ -286,9 +286,12 @@ omrsl_lookup_name(struct OMRPortLibrary *portLibrary, uintptr_t descriptor, char
 #endif /* defined(J9ZOS39064) */
 	{
 		handle = (dllhandle *)descriptor;
-		address = (void *)dllqueryfn(handle, name);
+		address = (void *)dlsym(handle, name);
 		if (NULL == address) {
-			address = (void *)dllqueryvar(handle, name);
+			address = (void *)dllqueryfn(handle, name);
+			if (NULL == address) {
+				address = (void *)dllqueryvar(handle, name);
+			}
 		}
 	}
 
